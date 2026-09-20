@@ -8,14 +8,14 @@ describe('RegisterView Component', () => {
   it('renders registration form inputs and checksum information', () => {
     renderWithProviders(<RegisterView />);
 
-    expect(screen.getByText(/Voter Registration/i)).toBeInTheDocument();
+    expect(screen.getByText(/Voter Verification & Digital Slip/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText('XXXX-XXXX-XXXX')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('ABC1234567')).toBeInTheDocument();
     expect(screen.getByText(/Verhoeff checksum algorithm/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Request Aadhaar OTP Challenge/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Request Aadhaar OTP/i })).toBeInTheDocument();
   });
 
-  it('renders Apple Wallet Voter Cryptographic Passport when voter is verified', () => {
+  it('renders Official Digital Voter Slip when voter is verified', () => {
     const preloadedState = {
       voter: {
         verified: true,
@@ -30,9 +30,9 @@ describe('RegisterView Component', () => {
 
     renderWithProviders(<RegisterView />, { preloadedState });
 
-    expect(screen.getByText(/Voter Cryptographic Passport/i)).toBeInTheDocument();
+    expect(screen.getByText(/Official Digital Voter Slip/i)).toBeInTheDocument();
     expect(screen.getByText(/apple banana cherry dragon eagle/i)).toBeInTheDocument();
-    expect(screen.getByText(/ELIGIBLE/i)).toBeInTheDocument();
+    expect(screen.getByText(/VERIFIED VOTER/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Copy Words/i })).toBeInTheDocument();
   });
 
@@ -49,9 +49,8 @@ describe('RegisterView Component', () => {
 
     renderWithProviders(<RegisterView />, { preloadedState });
 
-    expect(screen.getByText(/Aadhaar OTP Authentication/i)).toBeInTheDocument();
-    expect(screen.getByText(/Simulating secure UIDAI challenge/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Verify & Issue Passport/i })).toBeInTheDocument();
+    expect(screen.getByText(/Aadhaar Mobile OTP Verification/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Verify & Issue Slip/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Cancel/i })).toBeInTheDocument();
   });
 });

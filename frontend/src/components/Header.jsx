@@ -2,12 +2,12 @@ import React from 'react';
 
 export default function Header({ activeTab, setActiveTab }) {
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'register', label: 'Aadhaar KYC' },
-    { id: 'voting', label: 'Secret Ballot' },
-    { id: 'explorer', label: 'Block Explorer' },
-    { id: 'audit', label: 'Merkle Auditor' },
-    { id: 'attacks', label: 'Attack Sandbox' },
+    { id: 'dashboard', label: 'Election Overview' },
+    { id: 'register', label: 'Voter ID & Slip' },
+    { id: 'voting', label: 'EVM Voting Booth' },
+    { id: 'explorer', label: 'Public Vote Ledger' },
+    { id: 'audit', label: 'VVPAT Audit' },
+    { id: 'attacks', label: 'Security & Integrity' },
   ];
 
   return (
@@ -26,11 +26,11 @@ export default function Header({ activeTab, setActiveTab }) {
             boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
             fontSize: '1.1rem'
           }}>
-            ⚡
+            🇮🇳
           </div>
           <div style={{ fontWeight: 600, fontSize: '1.1rem', letterSpacing: '-0.02em', color: '#fff' }}>
-            BlockVote<span style={{ color: 'var(--apple-blue)' }}>.Go</span>
-            <span className="brand-badge-pill">APPLE DESIGN</span>
+            BlockVote<span style={{ color: 'var(--apple-blue)' }}>.Bharat</span>
+            <span className="brand-badge-pill">ELECTION PORTAL</span>
           </div>
         </div>
 
@@ -48,7 +48,7 @@ export default function Header({ activeTab, setActiveTab }) {
 
         <div className="status-pill">
           <div className="green-dot"></div>
-          <span>3-NODE MESH</span>
+          <span>3-NODE CONSENSUS</span>
         </div>
       </div>
     </header>

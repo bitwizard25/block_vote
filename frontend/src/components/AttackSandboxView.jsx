@@ -53,9 +53,9 @@ export default function AttackSandboxView() {
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Consensus Attack & Resilience Sandbox</h1>
+        <h1 className="display-title">Election Security & Anti-Tamper Verification (सुरक्षा व निष्पक्षता जांच)</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Test Byzantine Fault Tolerance in real time. Corrupt an individual validator's block history and observe automated majority peer healing.
+          Real-time EVM fault-tolerance. See what happens if an individual polling server is attacked or corrupted, and watch the honest majority observer nodes instantly detect and auto-heal the election record.
         </p>
       </div>
 

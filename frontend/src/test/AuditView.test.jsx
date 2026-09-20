@@ -5,10 +5,10 @@ import { renderWithProviders } from './test-utils';
 import AuditView from '../components/AuditView';
 
 describe('AuditView Component', () => {
-  it('renders audit search input and description', () => {
+  it('renders audit search input and description with VVPAT label', () => {
     renderWithProviders(<AuditView setActiveTab={vi.fn()} />);
 
-    expect(screen.getByText(/Cryptographic Merkle Auditor/i)).toBeInTheDocument();
+    expect(screen.getByText(/VVPAT Ballot Auditor/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Enter 64-character ballot transaction receipt hash.../i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Verify Proof/i })).toBeInTheDocument();
   });

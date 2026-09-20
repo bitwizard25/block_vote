@@ -54,9 +54,9 @@ export default function VotingView({ setActiveTab }) {
   return (
     <div style={{ maxWidth: '960px', margin: '0 auto' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Secret Ballot Booth</h1>
+        <h1 className="display-title">EVM Voting Booth / डिजिटल मतदान केंद्र</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Zero-Knowledge nullifier ballots. Your vote publishes candidate selection without ever linking to your identity.
+          Select your candidate and press the Blue Button. Your ballot is sealed cryptographically — 100% secret, tamper-proof, and verifiable.
         </p>
       </div>
 
@@ -65,35 +65,35 @@ export default function VotingView({ setActiveTab }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--apple-green)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Ballot Successfully Broadcasted
+                Vote Recorded Successfully • VVPAT Generated
               </span>
               <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', marginTop: '2px' }}>
-                Cryptographic Ballot Receipt
+                Digital VVPAT Ballot Receipt (डिजिटल मतपर्ची)
               </h3>
             </div>
-            <span className="status-pill" style={{ background: 'rgba(52, 199, 89, 0.15)' }}>
-              MEMPOOL STAGED
+            <span className="status-pill" style={{ background: 'rgba(52, 199, 89, 0.2)' }}>
+              VOTE SECURED (मतदान सफल)
             </span>
           </div>
 
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '12px' }}>
-            Your ballot is cryptographically signed and stored in the mempool pending inclusion in the next PoW block. Use this receipt hash to verify inclusion in the Merkle Tree.
+            Just like the physical VVPAT paper slip displayed at EVM booths, this receipt hash lets you verify your vote in the public ledger without ever revealing your personal identity.
           </p>
 
           <div className="pass-seed-box" style={{ wordBreak: 'break-all' }}>
-            <span style={{ color: 'var(--apple-blue)', marginRight: '8px' }}>RECEIPT:</span>
+            <span style={{ color: 'var(--apple-blue)', marginRight: '8px' }}>VVPAT RECEIPT HASH:</span>
             {lastReceiptHash}
           </div>
 
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             <button className="apple-btn apple-btn-primary" onClick={handleAuditClick}>
-              Audit in Merkle Explorer →
+              Audit in VVPAT Explorer (पर्ची जांचें) →
             </button>
             <button className="apple-btn apple-btn-secondary" onClick={copyReceipt}>
               {copiedReceipt ? '✓ Copied' : 'Copy Hash'}
             </button>
             <button className="apple-btn apple-btn-secondary" onClick={() => dispatch(resetVoteState())}>
-              Vote Again (Demo)
+              Cast Another Demo Vote
             </button>
           </div>
         </div>
@@ -177,10 +177,20 @@ export default function VotingView({ setActiveTab }) {
                   </div>
                 </div>
 
-                <div style={{ marginTop: '14px' }}>
-                  <span className={`segment-btn ${isSelected ? 'active' : ''}`} style={{ fontSize: '0.8rem' }}>
-                    {isSelected ? '✓ Selected' : 'Choose Candidate'}
-                  </span>
+                <div style={{ marginTop: '14px', width: '100%' }}>
+                  <button
+                    type="button"
+                    className="apple-btn"
+                    style={{
+                      width: '100%',
+                      fontSize: '0.86rem',
+                      background: isSelected ? 'var(--apple-blue)' : 'rgba(255, 255, 255, 0.1)',
+                      color: '#fff',
+                      border: isSelected ? '1px solid #0071e3' : '1px solid rgba(255, 255, 255, 0.15)'
+                    }}
+                  >
+                    {isSelected ? '✓ Selected (चुना गया)' : '🔘 Select Candidate / चुनें'}
+                  </button>
                 </div>
               </div>
             );
@@ -195,14 +205,14 @@ export default function VotingView({ setActiveTab }) {
         }}>
           <div className="apple-field-group">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <label className="apple-label" style={{ margin: 0 }}>Voter Cryptographic Secret Key (Passkey)</label>
+              <label className="apple-label" style={{ margin: 0 }}>Voter Secret Passkey / मतदाता गुप्त कुंजी (From Voter Slip)</label>
               {!verified && (
                 <button
                   type="button"
                   onClick={() => setActiveTab('register')}
                   style={{ background: 'none', border: 'none', color: 'var(--apple-blue)', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
-                  Generate via Aadhaar KYC →
+                  Get Slip via Aadhaar (मतदाता पर्ची पाएं) →
                 </button>
               )}
             </div>
@@ -218,7 +228,7 @@ export default function VotingView({ setActiveTab }) {
               required
             />
             <div className="apple-hint">
-              Used to derive your unique election nullifier <code>H(Secret || ElectionID)</code>. It ensures only one ballot can be cast per citizen.
+              Used to sign your ballot without revealing your identity. Ensures exactly 1-Citizen = 1-Vote.
             </div>
           </div>
 
@@ -227,9 +237,9 @@ export default function VotingView({ setActiveTab }) {
             className="apple-btn apple-btn-primary"
             onClick={handleCastVote}
             disabled={isSubmittingVote || !selectedCandidateId}
-            style={{ width: '100%', padding: '14px', fontSize: '1.05rem', marginTop: '8px' }}
+            style={{ width: '100%', padding: '16px', fontSize: '1.1rem', marginTop: '8px', fontWeight: 700 }}
           >
-            {isSubmittingVote ? 'Broadcasting Cryptographic Ballot...' : 'Cast Anonymous Ballot'}
+            {isSubmittingVote ? 'Recording Ballot in Blockchain...' : '🔘 PRESS BLUE BUTTON TO VOTE / नीला बटन दबाकर मत दें'}
           </button>
         </div>
       </div>

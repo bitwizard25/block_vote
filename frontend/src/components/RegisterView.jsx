@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { requestAadhaarOTP, verifyAadhaarOTP, cancelOtp } from '../store/slices/voterSlice';
 
-export default function RegisterView() {
+export default function RegisterView({ setActiveTab }) {
   const dispatch = useDispatch();
   const voter = useSelector((state) => state.voter);
 
@@ -34,16 +34,16 @@ export default function RegisterView() {
   return (
     <div style={{ maxWidth: '680px', margin: '0 auto' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Voter Registration</h1>
+        <h1 className="display-title">Voter Verification & Digital Slip</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Verify your citizenship via Aadhaar & Voter ID. Your identity produces a zero-knowledge commitment; your personal data is never written to the blockchain.
+          मतदाता सत्यापन व डिजिटल पर्ची — Verify your name on the official electoral roll using your Aadhaar & Voter ID. Your private identity is never exposed on the blockchain.
         </p>
       </div>
 
       <div className="glass-sheet">
         <form onSubmit={handleRequestOTP}>
           <div className="apple-field-group">
-            <label className="apple-label">Aadhaar Number (12 Digits)</label>
+            <label className="apple-label">Aadhaar Card Number / आधार संख्या (12 Digits)</label>
             <input
               type="text"
               className="apple-input mono"
@@ -52,11 +52,13 @@ export default function RegisterView() {
               placeholder="XXXX-XXXX-XXXX"
               required
             />
-            <div className="apple-hint">Verified using the Verhoeff checksum algorithm to prevent transposition errors.</div>
+            <div className="apple-hint">
+              Checked with the government Verhoeff checksum algorithm to prevent any typing mistakes.
+            </div>
           </div>
 
           <div className="apple-field-group">
-            <label className="apple-label">Voter ID Card Number (EPIC)</label>
+            <label className="apple-label">Voter ID Card Number (EPIC) / मतदाता पहचान पत्र</label>
             <input
               type="text"
               className="apple-input mono"
@@ -65,7 +67,7 @@ export default function RegisterView() {
               placeholder="ABC1234567"
               required
             />
-            <div className="apple-hint">Standard 10-character Election Commission of India identifier.</div>
+            <div className="apple-hint">Standard 10-character Election Commission of India (ECI) identifier.</div>
           </div>
 
           {voter.regError && (
@@ -75,55 +77,64 @@ export default function RegisterView() {
           )}
 
           <button type="submit" className="apple-btn apple-btn-primary" style={{ width: '100%' }}>
-            Request Aadhaar OTP Challenge
+            Request Aadhaar OTP / ओटीपी प्राप्त करें
           </button>
         </form>
 
-        {/* Apple Wallet Style Voter Passport */}
+        {/* Digital Matdata Pass / Voter Slip */}
         {voter.verified && (
           <div className="apple-wallet-pass">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--apple-gray)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  Apple Wallet Pass
+                  Election Commission of India • Digital Slip
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff', marginTop: '2px' }}>
-                  Voter Cryptographic Passport
+                  Official Digital Voter Slip (डिजिटल मतदाता पर्ची)
                 </h3>
               </div>
-              <span className="status-pill">ELIGIBLE</span>
+              <span className="status-pill" style={{ background: 'rgba(52, 199, 89, 0.2)' }}>
+                VERIFIED VOTER (मतदान हेतु पात्र)
+              </span>
             </div>
 
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '12px' }}>
-              Keep this 12-word mnemonic seed safe. This is your personal cryptographic passkey used to sign your ballot without revealing your identity.
+              Your vote is 100% secret. This 12-word cryptographic passkey is issued only to you. No candidate, polling officer, or government server can see who you vote for.
             </p>
 
             <div className="pass-seed-box">{voter.mnemonic}</div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                <strong>Secret Key:</strong>{' '}
+                <strong>Voter Secret Key:</strong>{' '}
                 <span className="mono" style={{ color: '#fff' }}>
                   {voter.voterSecret.substring(0, 16)}...
                 </span>
               </div>
-              <button className="apple-btn apple-btn-secondary" onClick={handleCopy} style={{ padding: '6px 14px', fontSize: '0.82rem' }}>
-                {copied ? '✓ Copied' : 'Copy Words'}
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button className="apple-btn apple-btn-secondary" onClick={handleCopy} style={{ padding: '6px 14px', fontSize: '0.82rem' }}>
+                  {copied ? '✓ Copied' : 'Copy Words'}
+                </button>
+                {setActiveTab && (
+                  <button className="apple-btn apple-btn-primary" onClick={() => setActiveTab('voting')} style={{ padding: '6px 14px', fontSize: '0.82rem' }}>
+                    Cast Vote Now (मत दें) →
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* iOS Passkey Style OTP Sheet Modal */}
+      {/* iOS Style OTP Sheet Modal */}
       {voter.otpRequested && (
         <div className="modal-scrim">
           <div className="modal-sheet-panel">
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔐</div>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff' }}>Aadhaar OTP Authentication</h3>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📲</div>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff' }}>Aadhaar Mobile OTP Verification</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '6px' }}>
-                Simulating secure UIDAI challenge sent to registered phone ending in <strong>7287</strong>.
+                आधार से जुड़े मोबाइल नंबर पर भेजा गया 6-अंकों का ओटीपी दर्ज करें (Sent to mobile ending in <strong>7287</strong>).
               </p>
             </div>
 
@@ -151,10 +162,10 @@ export default function RegisterView() {
                   onClick={() => dispatch(cancelOtp())}
                   style={{ flex: 1 }}
                 >
-                  Cancel
+                  Cancel (रद्द करें)
                 </button>
                 <button type="submit" className="apple-btn apple-btn-primary" style={{ flex: 2 }}>
-                  Verify & Issue Passport
+                  Verify & Issue Slip (सत्यापित करें)
                 </button>
               </div>
             </form>

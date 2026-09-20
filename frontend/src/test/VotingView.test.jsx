@@ -7,10 +7,10 @@ import VotingView from '../components/VotingView';
 describe('VotingView Component', () => {
   const mockElection = {
     id: 'elect_2026_gen',
-    title: 'General National Election 2026',
+    title: 'Lok Sabha General Election 2026',
     candidates: [
-      { id: 1, name: 'Dr. Amit Thakare', party: 'Blockchain Alliance', bio: 'Pioneer in Distributed Cryptography', vote_count: 5 },
-      { id: 2, name: 'Prof. Warkar Mam', party: 'Decentralized Tech Party', bio: 'Specialist in High-Throughput Systems', vote_count: 5 },
+      { id: 1, name: 'Rajeshwar Sharma', party: 'Rashtriya Pragati Dal', bio: 'Pioneer in Public Welfare', vote_count: 5 },
+      { id: 2, name: 'Dr. Sunita Deshmukh', party: 'Lok Seva Manch', bio: 'Specialist in Healthcare', vote_count: 5 },
     ]
   };
 
@@ -28,9 +28,9 @@ describe('VotingView Component', () => {
 
     renderWithProviders(<VotingView setActiveTab={vi.fn()} />, { preloadedState });
 
-    expect(screen.getByText(/Secret Ballot Booth/i)).toBeInTheDocument();
-    expect(screen.getByText('Dr. Amit Thakare')).toBeInTheDocument();
-    expect(screen.getByText('Prof. Warkar Mam')).toBeInTheDocument();
+    expect(screen.getByText(/EVM Voting Booth/i)).toBeInTheDocument();
+    expect(screen.getByText('Rajeshwar Sharma')).toBeInTheDocument();
+    expect(screen.getByText('Dr. Sunita Deshmukh')).toBeInTheDocument();
     expect(screen.getByText(/TOTAL VOTES: 10/i)).toBeInTheDocument();
   });
 
@@ -48,11 +48,11 @@ describe('VotingView Component', () => {
 
     const { store } = renderWithProviders(<VotingView setActiveTab={vi.fn()} />, { preloadedState });
 
-    fireEvent.click(screen.getByText('Dr. Amit Thakare'));
+    fireEvent.click(screen.getByText('Rajeshwar Sharma'));
     expect(store.getState().elections.selectedCandidateId).toBe(1);
   });
 
-  it('displays cryptographic ballot receipt pass on vote success', () => {
+  it('displays digital VVPAT ballot receipt slip on vote success', () => {
     const preloadedState = {
       elections: {
         currentElection: mockElection,
@@ -68,11 +68,11 @@ describe('VotingView Component', () => {
     const setActiveTab = vi.fn();
     renderWithProviders(<VotingView setActiveTab={setActiveTab} />, { preloadedState });
 
-    expect(screen.getByText(/Cryptographic Ballot Receipt/i)).toBeInTheDocument();
+    expect(screen.getByText(/Digital VVPAT Ballot Receipt/i)).toBeInTheDocument();
     expect(screen.getByText(/3f5a9b8c7d6e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Audit in Merkle Explorer →/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Audit in VVPAT Explorer/i })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /Audit in Merkle Explorer →/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Audit in VVPAT Explorer/i }));
     expect(setActiveTab).toHaveBeenCalledWith('audit');
   });
 });

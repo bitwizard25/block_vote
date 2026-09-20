@@ -25,9 +25,9 @@ export default function ExplorerView() {
   return (
     <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Ledger Block Explorer</h1>
+        <h1 className="display-title">Public Vote Ledger & Counting (पारदर्शी मतगणना)</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Immutable SHA3-256 blockchain journal. Every block aggregates ballots into a cryptographic Merkle root.
+          Open public election journal. Every citizen, political party, and election observer can verify the mathematical integrity of every sealed ballot block in real time.
         </p>
       </div>
 

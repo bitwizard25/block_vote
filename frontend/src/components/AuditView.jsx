@@ -34,16 +34,16 @@ export default function AuditView({ setActiveTab }) {
   return (
     <div style={{ maxWidth: '920px', margin: '0 auto' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Cryptographic Merkle Auditor</h1>
+        <h1 className="display-title">VVPAT Ballot Auditor (डिजिटल मतपर्ची सत्यापन)</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Zero-Trust end-to-end verification. Independently prove that your receipt hash exists in an immutable block header via SHA3-256 Merkle inclusion proofs.
+          Just like the physical VVPAT paper slip displayed at EVM booths, you can independently verify that your ballot is locked in the blockchain ledger without revealing who you are.
         </p>
       </div>
 
       <div className="glass-sheet">
         <form onSubmit={handleAudit}>
           <div className="apple-field-group">
-            <label className="apple-label">Ballot Receipt Hash (SHA3-256)</label>
+            <label className="apple-label">VVPAT Ballot Receipt Hash / मतपर्ची रसीद संख्या (SHA3-256)</label>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <input
                 type="text"
@@ -60,11 +60,11 @@ export default function AuditView({ setActiveTab }) {
                 disabled={isAuditing}
                 style={{ minWidth: '150px' }}
               >
-                {isAuditing ? 'Verifying Path...' : 'Verify Proof'}
+                {isAuditing ? 'Checking Ledger...' : 'Verify Proof (पर्ची जांचें)'}
               </button>
             </div>
             <div className="apple-hint">
-              This proof relies entirely on cryptographic hashes: <code>Hash(Left || Right)</code> ascending to the published block Merkle Root.
+              Mathematically confirms your ballot was aggregated into the block's published Merkle root.
             </div>
           </div>
         </form>

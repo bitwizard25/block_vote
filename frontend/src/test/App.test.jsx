@@ -14,9 +14,9 @@ describe('App E2E Tab Flow & Navigation', () => {
           json: () => Promise.resolve([
             {
               id: 'elect_2026_gen',
-              title: 'General National Election 2026',
+              title: 'Lok Sabha General Election 2026',
               candidates: [
-                { id: 1, name: 'Dr. Amit Thakare', party: 'Blockchain Alliance', bio: 'Pioneer', vote_count: 0 }
+                { id: 1, name: 'Rajeshwar Sharma', party: 'Rashtriya Pragati Dal', bio: 'Pioneer', vote_count: 0 }
               ]
             }
           ])
@@ -48,53 +48,53 @@ describe('App E2E Tab Flow & Navigation', () => {
     });
   });
 
-  it('renders Dashboard initially and smoothly transitions across all tabs', async () => {
+  it('renders Dashboard initially and smoothly transitions across all tabs with Indian election labels', async () => {
     renderWithProviders(<App />);
 
     // Initial Dashboard view
-    expect(screen.getByText(/Decentralized Governance/i)).toBeInTheDocument();
-    expect(screen.getByText(/Block Height/i)).toBeInTheDocument();
-    expect(screen.getByText(/Consensus Peers/i)).toBeInTheDocument();
+    expect(screen.getByText(/Lok Sabha General Election 2026/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sealed EVM Blocks/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Observer Nodes/i)[0]).toBeInTheDocument();
 
-    // 1. Navigate to Aadhaar KYC
-    fireEvent.click(screen.getByText(/Aadhaar KYC/i));
+    // 1. Navigate to Voter ID & Slip
+    fireEvent.click(screen.getByText(/Voter ID & Slip/i));
     await waitFor(() => {
-      expect(screen.getByText(/Voter Registration/i)).toBeInTheDocument();
+      expect(screen.getByText(/Voter Verification & Digital Slip/i)).toBeInTheDocument();
       expect(screen.getByPlaceholderText('XXXX-XXXX-XXXX')).toBeInTheDocument();
     });
 
-    // 2. Navigate to Secret Ballot
-    fireEvent.click(screen.getByText(/Secret Ballot/i));
+    // 2. Navigate to EVM Voting Booth
+    fireEvent.click(screen.getByText(/EVM Voting Booth/i));
     await waitFor(() => {
-      expect(screen.getByText(/Secret Ballot Booth/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Cast Anonymous Ballot/i })).toBeInTheDocument();
+      expect(screen.getByText(/EVM Voting Booth/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /PRESS BLUE BUTTON TO VOTE/i })).toBeInTheDocument();
     });
 
-    // 3. Navigate to Block Explorer
-    fireEvent.click(screen.getByText(/Block Explorer/i));
+    // 3. Navigate to Public Vote Ledger
+    fireEvent.click(screen.getByText(/Public Vote Ledger/i));
     await waitFor(() => {
-      expect(screen.getByText(/Ledger Block Explorer/i)).toBeInTheDocument();
+      expect(screen.getByText(/Public Vote Ledger & Counting/i)).toBeInTheDocument();
       expect(screen.getByPlaceholderText(/Search blocks by hash/i)).toBeInTheDocument();
     });
 
-    // 4. Navigate to Merkle Auditor
-    fireEvent.click(screen.getByText(/Merkle Auditor/i));
+    // 4. Navigate to VVPAT Audit
+    fireEvent.click(screen.getByText(/VVPAT Audit/i));
     await waitFor(() => {
-      expect(screen.getByText(/Cryptographic Merkle Auditor/i)).toBeInTheDocument();
+      expect(screen.getByText(/VVPAT Ballot Auditor/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Verify Proof/i })).toBeInTheDocument();
     });
 
-    // 5. Navigate to Attack Sandbox
-    fireEvent.click(screen.getByText(/Attack Sandbox/i));
+    // 5. Navigate to Security & Integrity
+    fireEvent.click(screen.getByText(/Security & Integrity/i));
     await waitFor(() => {
-      expect(screen.getByText(/Consensus Attack & Resilience Sandbox/i)).toBeInTheDocument();
+      expect(screen.getByText(/Election Security & Anti-Tamper Verification/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Corrupt Node-Alpha Ledger/i })).toBeInTheDocument();
     });
 
-    // 6. Navigate back to Dashboard
-    fireEvent.click(screen.getByText(/Dashboard/i));
+    // 6. Navigate back to Election Overview
+    fireEvent.click(screen.getByText(/Election Overview/i));
     await waitFor(() => {
-      expect(screen.getByText(/Decentralized Governance/i)).toBeInTheDocument();
+      expect(screen.getByText(/Lok Sabha General Election 2026/i)).toBeInTheDocument();
     });
   });
 });

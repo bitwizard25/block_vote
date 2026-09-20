@@ -46,7 +46,7 @@ describe('ExplorerView Component', () => {
 
     renderWithProviders(<ExplorerView />, { preloadedState });
 
-    expect(screen.getByText(/Ledger Block Explorer/i)).toBeInTheDocument();
+    expect(screen.getByText(/Public Vote Ledger & Counting/i)).toBeInTheDocument();
     expect(screen.getByText(/2 BLOCKS MINED/i)).toBeInTheDocument();
     expect(screen.getByText(/BLOCK #0 • GENESIS/i)).toBeInTheDocument();
     expect(screen.getByText(/BLOCK #1/i)).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('ExplorerView Component', () => {
     renderWithProviders(<ExplorerView />, { preloadedState });
 
     const inspectButtons = screen.getAllByText(/Inspect Block ▼/i);
-    fireEvent.click(inspectButtons[0]); // Click latest block (Block 1)
+    fireEvent.click(inspectButtons[0]);
 
     expect(screen.getByText('root_block_1')).toBeInTheDocument();
     expect(screen.getByText(/Included Sealed Transactions/i)).toBeInTheDocument();

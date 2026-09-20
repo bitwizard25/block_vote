@@ -18,7 +18,7 @@ describe('AttackSandboxView Component', () => {
 
     renderWithProviders(<AttackSandboxView />, { preloadedState });
 
-    expect(screen.getByText(/Consensus Attack & Resilience Sandbox/i)).toBeInTheDocument();
+    expect(screen.getByText(/Election Security & Anti-Tamper Verification/i)).toBeInTheDocument();
     expect(screen.getByText('Node-Alpha')).toBeInTheDocument();
     expect(screen.getByText('Node-Beta')).toBeInTheDocument();
     expect(screen.getByText('Node-Gamma')).toBeInTheDocument();
