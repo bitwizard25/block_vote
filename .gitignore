@@ -71,4 +71,4 @@ docs/
 # Go binaries
 *.exe
 *.exe~
-blockvote
+/blockvote
