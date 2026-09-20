@@ -64,37 +64,37 @@ describe('App E2E Tab Flow & Navigation', () => {
     });
 
     // 2. Navigate to EVM Voting Booth
-    fireEvent.click(screen.getByText(/EVM Voting Booth/i));
+    fireEvent.click(screen.getByRole('button', { name: /EVM Voting Booth/i }));
     await waitFor(() => {
-      expect(screen.getByText(/EVM Voting Booth/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /EVM Voting Booth/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /PRESS BLUE BUTTON TO VOTE/i })).toBeInTheDocument();
     });
 
     // 3. Navigate to Public Vote Ledger
-    fireEvent.click(screen.getByText(/Public Vote Ledger/i));
+    fireEvent.click(screen.getByRole('button', { name: /Public Vote Ledger/i }));
     await waitFor(() => {
-      expect(screen.getByText(/Public Vote Ledger & Counting/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Public Vote Ledger/i })).toBeInTheDocument();
       expect(screen.getByPlaceholderText(/Search blocks by hash/i)).toBeInTheDocument();
     });
 
     // 4. Navigate to VVPAT Audit
-    fireEvent.click(screen.getByText(/VVPAT Audit/i));
+    fireEvent.click(screen.getByRole('button', { name: /VVPAT Audit/i }));
     await waitFor(() => {
-      expect(screen.getByText(/VVPAT Ballot Auditor/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /VVPAT Ballot Auditor/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Verify Proof/i })).toBeInTheDocument();
     });
 
     // 5. Navigate to Security & Integrity
-    fireEvent.click(screen.getByText(/Security & Integrity/i));
+    fireEvent.click(screen.getByRole('button', { name: /Security & Integrity/i }));
     await waitFor(() => {
-      expect(screen.getByText(/Election Security & Anti-Tamper Verification/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Election Security/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Corrupt Node-Alpha Ledger/i })).toBeInTheDocument();
     });
 
     // 6. Navigate back to Election Overview
-    fireEvent.click(screen.getByText(/Election Overview/i));
+    fireEvent.click(screen.getByRole('button', { name: /Election Overview/i }));
     await waitFor(() => {
-      expect(screen.getByText(/Lok Sabha General Election 2026/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Lok Sabha General Election 2026/i })).toBeInTheDocument();
     });
   });
 });
