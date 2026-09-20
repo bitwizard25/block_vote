@@ -1,0 +1,12 @@
+{
+  "name": "blockvote",
+  "version": "1.0.0",
+  "description": "High-Assurance Privacy-Preserving Blockchain Voting Platform (Go + React + Apple HIG)",
+  "scripts": {
+    "test": "go test -v ./... && cd frontend && npm test",
+    "test:go": "go test -v ./...",
+    "test:frontend": "cd frontend && npm test",
+    "build": "cd frontend && npm run build && powershell -Command \"Copy-Item -Path 'dist/*' -Destination '../web/templates' -Recurse -Force\" && go build -o blockvote.exe ./cmd/blockvote",
+    "start": ".\\blockvote.exe"
+  }
+}

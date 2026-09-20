@@ -56,6 +56,11 @@ func SetupRouter(app *AppState) http.Handler {
 			return
 		}
 
+		if app.VoterRoll.IsCitizenRegistered(cleanAadhaar, cleanEPIC) {
+			http.Error(w, "citizen is already registered in voter roll", http.StatusBadRequest)
+			return
+		}
+
 		otp := identity.GenerateOTP(cleanAadhaar)
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -241,6 +246,13 @@ func SetupRouter(app *AppState) http.Handler {
 			tree := blockchain.NewMerkleTree(b.Transactions)
 			proof, err := tree.GetProof(req.ReceiptHash)
 			if err == nil {
+				var candidateID int
+				for _, tx := range b.Transactions {
+					if tx.Hash == req.ReceiptHash {
+						candidateID = tx.CandidateID
+						break
+					}
+				}
 				w.Header().Set("Content-Type", "application/json")
 				_ = json.NewEncoder(w).Encode(map[string]interface{}{
 					"found":        true,
@@ -248,6 +260,8 @@ func SetupRouter(app *AppState) http.Handler {
 					"block_hash":   b.Hash,
 					"merkle_root":  b.MerkleRoot,
 					"proof":        proof,
+					"candidate_id": candidateID,
+					"receipt_hash": req.ReceiptHash,
 					"verified":     blockchain.VerifyProof(req.ReceiptHash, b.MerkleRoot, proof),
 				})
 				return

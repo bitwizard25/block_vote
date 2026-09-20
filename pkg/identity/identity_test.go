@@ -15,6 +15,7 @@ func TestValidateAadhaar(t *testing.T) {
 		t.Fatalf("failed to generate check digit: %v", err)
 	}
 	validAadhaar := fmt.Sprintf("%s%d", prefix, cd)
+	t.Logf("VALID_AADHAAR: %s", validAadhaar)
 	formattedAadhaar := fmt.Sprintf("%s-%s-%s", validAadhaar[0:4], validAadhaar[4:8], validAadhaar[8:12])
 
 	clean, err := ValidateAadhaar(formattedAadhaar)

@@ -51,6 +51,14 @@ func (vr *VoterRoll) IsCommitmentRegistered(commitment string) bool {
 	return vr.commitments[commitment]
 }
 
+func (vr *VoterRoll) IsCitizenRegistered(aadhaar, epic string) bool {
+	vr.mu.RLock()
+	defer vr.mu.RUnlock()
+	aHash := crypto.SHA3String(aadhaar + ":" + vr.systemSalt)
+	eHash := crypto.SHA3String(epic + ":" + vr.systemSalt)
+	return vr.registered[aHash] || vr.epicHash[eHash]
+}
+
 func (vr *VoterRoll) Count() int {
 	vr.mu.RLock()
 	defer vr.mu.RUnlock()
