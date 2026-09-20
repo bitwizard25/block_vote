@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Header from './components/Header';
+import { Sidebar, TopBar } from './components/Header';
 import DashboardView from './components/DashboardView';
 import RegisterView from './components/RegisterView';
 import VotingView from './components/VotingView';
@@ -118,41 +118,56 @@ export default function App() {
     };
   }, [dispatch]);
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="platform-layout">
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
-      <main className="app-container" style={{ flex: 1 }}>
-        {activeTab === 'dashboard' && <DashboardView setActiveTab={setActiveTab} />}
-        {activeTab === 'register' && <RegisterView setActiveTab={setActiveTab} />}
-        {activeTab === 'voting' && <VotingView setActiveTab={setActiveTab} />}
-        {activeTab === 'explorer' && <ExplorerView setActiveTab={setActiveTab} />}
-        {activeTab === 'audit' && <AuditView setActiveTab={setActiveTab} />}
-        {activeTab === 'attacks' && <AttackSandboxView setActiveTab={setActiveTab} />}
-      </main>
+      <div className="platform-main">
+        <TopBar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
 
-      <footer style={{
-        borderTop: '1px solid var(--material-border)',
-        padding: '24px',
-        textAlign: 'center',
-        fontSize: '0.82rem',
-        color: 'var(--text-tertiary)',
-        background: 'rgba(10, 10, 14, 0.6)',
-        backdropFilter: 'blur(20px)'
-      }}>
-        <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            BlockVote.Go — High-Assurance Blockchain Voting System (Apple HIG Specification)
+        <main className="platform-content">
+          {activeTab === 'dashboard' && <DashboardView setActiveTab={setActiveTab} />}
+          {activeTab === 'register' && <RegisterView setActiveTab={setActiveTab} />}
+          {activeTab === 'voting' && <VotingView setActiveTab={setActiveTab} />}
+          {activeTab === 'explorer' && <ExplorerView setActiveTab={setActiveTab} />}
+          {activeTab === 'audit' && <AuditView setActiveTab={setActiveTab} />}
+          {activeTab === 'attacks' && <AttackSandboxView setActiveTab={setActiveTab} />}
+        </main>
+
+        <footer style={{
+          borderTop: '1px solid var(--material-border)',
+          padding: '20px 32px',
+          fontSize: '0.8rem',
+          color: 'var(--text-tertiary)',
+          background: 'rgba(10, 10, 14, 0.7)',
+          backdropFilter: 'blur(20px)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+            <div>
+              BlockVote Bharat — National Digital Election Platform (Figma High-Assurance Architecture)
+            </div>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <span>SHA3-256 Merkle Proofs</span>
+              <span>•</span>
+              <span>Verhoeff Checksum $D_5$</span>
+              <span>•</span>
+              <span>3-Node Byzantine Mesh Consensus</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <span>SHA3-256 Merkle Proofs</span>
-            <span>•</span>
-            <span>Verhoeff Checksum</span>
-            <span>•</span>
-            <span>Byzantine Mesh Consensus</span>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }

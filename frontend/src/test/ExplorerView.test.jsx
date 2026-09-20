@@ -77,7 +77,7 @@ describe('ExplorerView Component', () => {
 
     renderWithProviders(<ExplorerView />, { preloadedState });
 
-    const inspectButtons = screen.getAllByText(/Inspect Block ▼/i);
+    const inspectButtons = screen.getAllByText(/Inspect Block/i);
     fireEvent.click(inspectButtons[0]);
 
     expect(screen.getByText('root_block_1')).toBeInTheDocument();

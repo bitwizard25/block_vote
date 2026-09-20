@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchNodeStatus, simulateTamper, healNode } from '../store/slices/blockchainSlice';
+import { IconWarningTriangle, IconShieldCheck } from './icons';
 
 export default function AttackSandboxView() {
   const dispatch = useDispatch();
@@ -40,7 +41,6 @@ export default function AttackSandboxView() {
     }
   };
 
-  // Build list of node cards (supporting both Node-Alpha and alpha keys)
   const defaultNodes = [
     { id: 'Node-Alpha', alias: 'alpha', name: 'Node-Alpha', role: 'Mining / Validator Node' },
     { id: 'Node-Beta', alias: 'beta', name: 'Node-Beta', role: 'Consensus Peer & Auditor' },
@@ -51,11 +51,11 @@ export default function AttackSandboxView() {
   const hasTamper = alphaStatus.tampered === true;
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Election Security & Anti-Tamper Verification (सुरक्षा व निष्पक्षता जांच)</h1>
+        <h1 className="display-title">Election Security & Anti-Tamper Verification (Suraksha Lab)</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Real-time EVM fault-tolerance. See what happens if an individual polling server is attacked or corrupted, and watch the honest majority observer nodes instantly detect and auto-heal the election record.
+          Real-time fault tolerance test. Dekhein agar koi hacker kisi ek polling node ka data change karne ki koshish kare, toh honest majority nodes usse kaise pakadti aur auto-heal karti hain.
         </p>
       </div>
 
@@ -71,7 +71,7 @@ export default function AttackSandboxView() {
           alignItems: 'center',
           gap: '12px'
         }}>
-          <span style={{ fontSize: '1.2rem' }}>{actionMessage.type === 'danger' ? '⚠️' : '🛡️'}</span>
+          {actionMessage.type === 'danger' ? <IconWarningTriangle size={20} /> : <IconShieldCheck size={20} />}
           <span>{actionMessage.text}</span>
         </div>
       )}
@@ -99,80 +99,66 @@ export default function AttackSandboxView() {
                 <span
                   className="status-pill"
                   style={{
-                    background: isTampered ? 'rgba(255, 69, 58, 0.2)' : 'rgba(52, 199, 89, 0.15)',
+                    background: isTampered ? 'rgba(255, 69, 58, 0.2)' : 'rgba(48, 209, 88, 0.2)',
                     color: isTampered ? 'var(--apple-red)' : 'var(--apple-green)',
-                    borderColor: isTampered ? 'rgba(255, 69, 58, 0.4)' : 'rgba(52, 199, 89, 0.3)'
+                    border: `1px solid ${isTampered ? 'var(--apple-red)' : 'var(--apple-green)'}`
                   }}
                 >
-                  <span
-                    style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: isTampered ? 'var(--apple-red)' : 'var(--apple-green)',
-                      display: 'inline-block',
-                      boxShadow: isTampered ? '0 0 8px var(--apple-red)' : '0 0 8px var(--apple-green)'
-                    }}
-                  />
                   {isTampered ? 'BYZANTINE CORRUPT' : 'SYNCHRONIZED'}
                 </span>
               </div>
 
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-                {node.role}
-              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', marginBottom: '14px' }}>
+                Role: <strong>{node.role}</strong>
+              </p>
 
-              <div style={{ background: 'rgba(0, 0, 0, 0.4)', borderRadius: '12px', padding: '14px', fontSize: '0.82rem', fontFamily: 'var(--font-mono)' }}>
-                <div style={{ marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Height:</span>{' '}
-                  <strong style={{ color: '#fff' }}>{info.height ?? '0'}</strong>
-                </div>
-                <div>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Latest Hash:</span>
-                  <div style={{
-                    color: isTampered ? 'var(--apple-red)' : 'var(--apple-blue)',
-                    wordBreak: 'break-all',
-                    fontSize: '0.75rem',
-                    marginTop: '2px'
-                  }}>
-                    {info.latest_hash ? `${info.latest_hash.substring(0, 24)}...` : 'Synchronizing...'}
-                  </div>
-                </div>
+              <div style={{
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '10px',
+                padding: '12px',
+                fontSize: '0.8rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px'
+              }}>
+                <div><strong>Honest Peer:</strong> {info.is_honest !== false ? 'Yes (Honest)' : 'No (Compromised)'}</div>
+                <div><strong>Blocks Height:</strong> {info.block_height !== undefined ? info.block_height : 0}</div>
+                <div><strong>State:</strong> {isTampered ? 'Hash Mismatch / Corrupted' : 'Consensus Active'}</div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Control Actions Sheet */}
-      <div className="glass-sheet">
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '8px' }}>Fault Injection & Consensus Orchestration</h3>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px' }}>
-          Simulate an adversarial attack where a rogue validator tries to rewrite historical blocks or alter election tallies.
-        </p>
+      {/* Interactive Controls */}
+      <div className="double-bezel-wrapper">
+        <div className="double-bezel-core">
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px' }}>
+            Interactive Byzantine Fault Tolerance Sandbox (Tamper Test Karo)
+          </h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '18px' }}>
+            Click karein aur dekhein ki tamper hone par election system kaise detect karta hai aur auto-heal hota hai.
+          </p>
 
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          <button
-            className="apple-btn apple-btn-danger"
-            onClick={handleTamper}
-            disabled={loadingAction || hasTamper}
-            style={{ flex: 1, minWidth: '220px', padding: '14px' }}
-          >
-            {loadingAction ? 'Executing...' : 'Corrupt Node-Alpha Ledger (Attack)'}
-          </button>
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+            <button
+              className="apple-btn apple-btn-danger"
+              onClick={handleTamper}
+              disabled={loadingAction || hasTamper}
+              style={{ opacity: hasTamper ? 0.5 : 1, flex: 1, minWidth: '220px' }}
+            >
+              Corrupt Node-Alpha Ledger (Attack Simulate Karo)
+            </button>
 
-          <button
-            className="apple-btn apple-btn-success"
-            onClick={handleHeal}
-            disabled={loadingAction || !hasTamper}
-            style={{ flex: 1, minWidth: '220px', padding: '14px', opacity: !hasTamper ? 0.6 : 1 }}
-          >
-            {loadingAction ? 'Synchronizing...' : 'Consensus Auto-Heal from Majority'}
-          </button>
-        </div>
-
-        <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)', fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-          <strong>How BlockVote Prevents 51% & Byzantine Attacks:</strong> Each node cryptographically cross-validates every incoming block hash, previous block reference, and Merkle root against its peers. In a 3-node mesh, if 1 node reports an inconsistent block hash, the remaining 2/3 majority rejects the invalid chain and automatically overwrites the compromised peer with the canonical ledger.
+            <button
+              className="apple-btn apple-btn-success"
+              onClick={handleHeal}
+              disabled={loadingAction || !hasTamper}
+              style={{ opacity: !hasTamper ? 0.5 : 1, flex: 1, minWidth: '220px' }}
+            >
+              Consensus Auto-Heal from Majority (Auto-Heal Karo)
+            </button>
+          </div>
         </div>
       </div>
     </div>

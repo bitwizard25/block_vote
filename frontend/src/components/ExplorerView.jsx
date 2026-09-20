@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { IconChevronUp, IconChevronDown, IconCheck } from './icons';
 
 export default function ExplorerView() {
   const { blocks } = useSelector((state) => state.blockchain);
@@ -23,11 +24,11 @@ export default function ExplorerView() {
   };
 
   return (
-    <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '1040px', margin: '0 auto', width: '100%' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 className="display-title">Public Vote Ledger & Counting (पारदर्शी मतगणना)</h1>
+        <h1 className="display-title">Public Vote Ledger & Counting (Sabka Khula Khata)</h1>
         <p className="display-subtitle" style={{ margin: '0 auto' }}>
-          Open public election journal. Every citizen, political party, and election observer can verify the mathematical integrity of every sealed ballot block in real time.
+          Khula public election journal. Har citizen, candidate aur observer har block aur vote ki mathematical proof real time me verify kar sakta hai.
         </p>
       </div>
 
@@ -94,72 +95,75 @@ export default function ExplorerView() {
                     {txCount} {txCount === 1 ? 'TRANSACTION' : 'TRANSACTIONS'}
                   </div>
                   <button className="apple-btn apple-btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>
-                    {isExpanded ? 'Hide Details ▲' : 'Inspect Block ▼'}
+                    {isExpanded ? <>Hide Details <IconChevronUp size={13} /></> : <>Inspect Block <IconChevronDown size={13} /></>}
                   </button>
                 </div>
               </div>
 
-              {/* Collapsible Details */}
               {isExpanded && (
-                <div style={{
-                  marginTop: '20px',
-                  paddingTop: '20px',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                  fontSize: '0.86rem'
-                }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+                <div style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
                     <div>
-                      <span className="stat-caption">Previous Hash</span>
-                      <div className="mono" style={{ color: 'var(--text-secondary)', wordBreak: 'break-all', fontSize: '0.8rem' }}>
-                        {block.prev_hash || '0000000000000000000000000000000000000000000000000000000000000000'}
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>PREVIOUS HASH</div>
+                      <div className="mono" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
+                        {block.prev_hash || 'None (Genesis Root)'}
                       </div>
                     </div>
                     <div>
-                      <span className="stat-caption">Merkle Root</span>
-                      <div className="mono" style={{ color: 'var(--apple-blue)', wordBreak: 'break-all', fontSize: '0.8rem' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>MERKLE ROOT</div>
+                      <div className="mono" style={{ fontSize: '0.8rem', color: 'var(--apple-blue)', wordBreak: 'break-all' }}>
                         {block.merkle_root}
                       </div>
                     </div>
                     <div>
-                      <span className="stat-caption">Proof of Work Nonce</span>
-                      <div className="mono" style={{ color: '#fff' }}>
-                        {block.nonce} (Difficulty: {block.difficulty})
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>POW NONCE & DIFFICULTY</div>
+                      <div className="mono" style={{ fontSize: '0.85rem', color: '#fff' }}>
+                        Nonce: {block.nonce} • Diff: {block.difficulty}
                       </div>
                     </div>
                   </div>
 
-                  {/* Transactions list */}
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '10px' }}>
-                    Included Sealed Transactions ({txCount})
+                  <h4 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                    Included Sealed Transactions (Block Me Sealed Votes) ({txCount}):
                   </h4>
 
                   {txCount === 0 ? (
-                    <div style={{ color: 'var(--text-tertiary)', fontStyle: 'italic' }}>
-                      No vote transactions in this block (System Anchor).
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-tertiary)' }}>
+                      Genesis initialization block (Abhi koi vote nahi hai).
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      {block.transactions.map((tx) => (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {block.transactions.map((tx, idx) => (
                         <div
-                          key={tx.id || tx.receipt_hash}
+                          key={tx.nullifier || idx}
                           style={{
-                            background: 'rgba(0, 0, 0, 0.4)',
+                            background: 'rgba(0, 0, 0, 0.35)',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
-                            borderRadius: '12px',
-                            padding: '14px',
-                            fontFamily: 'var(--font-mono)',
-                            fontSize: '0.8rem'
+                            borderRadius: '10px',
+                            padding: '12px 14px',
+                            fontSize: '0.8rem',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '8px'
                           }}
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                            <span style={{ color: 'var(--apple-blue)' }}>RECEIPT HASH: {tx.receipt_hash}</span>
-                            <span style={{ color: 'var(--text-tertiary)' }}>{new Date(tx.timestamp * 1000).toLocaleTimeString()}</span>
+                          <div>
+                            <span style={{ color: 'var(--apple-blue)', fontWeight: 600 }}>Ballot #{idx + 1}:</span>{' '}
+                            <span>Candidate ID: <strong>{tx.candidate_id}</strong></span>
+                            {tx.receipt_hash && (
+                              <div className="mono" style={{ color: 'var(--apple-blue)', fontSize: '0.75rem', marginTop: '3px' }}>
+                                RECEIPT HASH: {tx.receipt_hash}
+                              </div>
+                            )}
+                            <div className="mono" style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: '3px' }}>
+                              Nullifier: {tx.nullifier ? tx.nullifier.substring(0, 24) : '???'}...
+                            </div>
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', color: 'var(--text-secondary)' }}>
-                            <div>Candidate: <strong style={{ color: '#fff' }}>{tx.candidate_id}</strong></div>
-                            <div>Nullifier: <span style={{ color: 'var(--apple-orange)' }}>{tx.nullifier ? tx.nullifier.substring(0, 16) + '...' : 'N/A'}</span></div>
-                            <div>Election: {tx.election_id}</div>
-                          </div>
+                          <span className="status-pill" style={{ fontSize: '0.7rem', background: 'rgba(48, 209, 88, 0.15)', color: 'var(--apple-green)' }}>
+                            <IconCheck size={11} /> SEALED VOTE
+                          </span>
                         </div>
                       ))}
                     </div>
