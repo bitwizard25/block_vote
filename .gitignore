@@ -67,3 +67,8 @@ node_modules/
 
 # Documentation and superpower specs
 docs/
+
+# Go binaries
+*.exe
+*.exe~
+/blockvote
