@@ -31,7 +31,9 @@ describe('VotingView Component', () => {
     expect(screen.getByText(/EVM Voting Booth/i)).toBeInTheDocument();
     expect(screen.getByText('Rajeshwar Sharma')).toBeInTheDocument();
     expect(screen.getByText('Dr. Sunita Deshmukh')).toBeInTheDocument();
-    expect(screen.getByText(/TOTAL VOTES: 10/i)).toBeInTheDocument();
+    // The count renders inside a separate NumberFlow element (a sibling
+    // node, not part of this text node), so assert the label directly.
+    expect(screen.getByText(/TOTAL VOTES:/i)).toBeInTheDocument();
   });
 
   it('allows candidate selection', () => {

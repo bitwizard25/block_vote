@@ -205,6 +205,27 @@ export function IconUser({ size = 20, ...props }) {
   );
 }
 
+export function IconLock({ size = 20, ...props }) {
+  return (
+    <svg {...base(size, props)}>
+      <rect x="5" y="10.5" width="14" height="10" rx="2.2" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+      <circle cx="12" cy="15" r="1.4" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function IconMesh({ size = 20, ...props }) {
+  return (
+    <svg {...base(size, props)}>
+      <circle cx="6" cy="7" r="2.1" />
+      <circle cx="18" cy="7" r="2.1" />
+      <circle cx="12" cy="18" r="2.1" />
+      <path d="M7.7 8.3 10.6 16.2M16.3 8.3 13.4 16.2M8 7h8" />
+    </svg>
+  );
+}
+
 export function IconReceiptLarge({ size = 40, ...props }) {
   return (
     <svg {...base(size, props)}>

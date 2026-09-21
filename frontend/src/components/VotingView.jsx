@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import gsap from 'gsap';
 import { selectCandidate } from '../store/slices/electionsSlice';
 import { castBallot, resetVoteState, setVoterSecretDirect } from '../store/slices/voterSlice';
 import { setReceiptInput } from '../store/slices/auditSlice';
+import NumberFlow from '@number-flow/react';
 import { IconEmblem, IconCheck, IconWarningTriangle, IconReceiptLarge, IconInfoCircle, IconArrowRight, IconDot } from './icons';
 import { getPartySymbolIcon } from './partySymbols';
 
@@ -13,11 +15,45 @@ export default function VotingView({ setActiveTab }) {
   const [manualSecret, setManualSecret] = useState(voterSecret || '');
   const [copiedReceipt, setCopiedReceipt] = useState(false);
 
+  const successCardRef = useRef(null);
+  const successPillRef = useRef(null);
+  const receiptBoxRef = useRef(null);
+
   useEffect(() => {
     if (voterSecret) {
       setManualSecret(voterSecret);
     }
   }, [voterSecret]);
+
+  // Vote-cast is rare and high-stakes (once per citizen), so it earns a fuller
+  // orchestrated payoff: the confirmation card, the "secured" pill and the
+  // VVPAT receipt reveal stagger in as one GSAP sequence instead of popping in
+  // together. Reduced-motion keeps the reveal but drops the movement/overshoot.
+  useEffect(() => {
+    if (!voteSuccess) return;
+    const card = successCardRef.current;
+    if (!card) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+      if (reduceMotion) {
+        tl.from(card, { opacity: 0, duration: 0.3, ease: 'power1.out' })
+          .from(successPillRef.current, { opacity: 0, duration: 0.25, ease: 'power1.out' }, '-=0.05')
+          .from(receiptBoxRef.current, { opacity: 0, duration: 0.25, ease: 'power1.out' }, '-=0.05');
+      } else {
+        tl.from(card, { opacity: 0, y: 24, duration: 0.5, ease: 'back.out(1.7)' })
+          .from(successPillRef.current, { opacity: 0, scale: 0.85, duration: 0.35, ease: 'back.out(1.7)' }, '-=0.25')
+          .fromTo(receiptBoxRef.current,
+            { opacity: 0.4, scale: 0.97 },
+            { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' },
+            '-=0.1'
+          );
+      }
+    });
+
+    return () => ctx.revert();
+  }, [voteSuccess]);
 
   const handleCastVote = (e) => {
     if (e) e.preventDefault();
@@ -92,7 +128,7 @@ export default function VotingView({ setActiveTab }) {
 
       {/* Success VVPAT Slip Card */}
       {voteSuccess && (
-        <div className="apple-wallet-pass" style={{ marginBottom: '28px' }}>
+        <div className="apple-wallet-pass" style={{ marginBottom: '28px' }} ref={successCardRef}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
             <div>
               <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--apple-green)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -102,7 +138,7 @@ export default function VotingView({ setActiveTab }) {
                 Digital VVPAT Ballot Receipt (Aapki Digital Matdata Parchi)
               </h3>
             </div>
-            <span className="status-pill" style={{ background: 'rgba(48, 209, 88, 0.18)' }}>
+            <span className="status-pill" style={{ background: 'rgba(48, 209, 88, 0.18)' }} ref={successPillRef}>
               <IconCheck size={12} /> VOTE SECURED (Vote Safalta Se Seal Hua)
             </span>
           </div>
@@ -111,7 +147,7 @@ export default function VotingView({ setActiveTab }) {
             Jaise physical EVM booth me VVPAT paper slip 7 seconds ke liye dikhti hai, waise hi yeh cryptographic receipt hash confirm karti hai ki aapka vote ledger me count ho chuka hai, bina aapka naam ya identity reveal kiye.
           </p>
 
-          <div className="pass-seed-box" style={{ wordBreak: 'break-all' }}>
+          <div className="pass-seed-box" style={{ wordBreak: 'break-all' }} ref={receiptBoxRef}>
             <span style={{ color: 'var(--apple-blue)', marginRight: '8px' }}>VVPAT RECEIPT HASH:</span>
             {lastReceiptHash}
           </div>
@@ -158,7 +194,7 @@ export default function VotingView({ setActiveTab }) {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span className="status-pill" style={{ fontSize: '0.72rem' }}>
-                TOTAL VOTES: {totalElectionVotes}
+                TOTAL VOTES: <NumberFlow value={totalElectionVotes} />
               </span>
               <div className="evm-ready-indicator">
                 <span className="pulse-dot"></span>
@@ -220,7 +256,7 @@ export default function VotingView({ setActiveTab }) {
                     {/* Progress Bar */}
                     <div style={{ marginTop: '6px', maxWidth: '280px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-tertiary)', marginBottom: '2px' }}>
-                        <span>Live Votes: {candidate.vote_count}</span>
+                        <span>Live Votes: <NumberFlow value={candidate.vote_count} /></span>
                         <span>{pct}%</span>
                       </div>
                       <div style={{ height: '4px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden' }}>

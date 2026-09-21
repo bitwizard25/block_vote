@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Sidebar, TopBar } from './components/Header';
+import LandingView from './components/LandingView';
 import DashboardView from './components/DashboardView';
 import RegisterView from './components/RegisterView';
 import VotingView from './components/VotingView';
@@ -20,7 +21,7 @@ import {
 
 export default function App() {
   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('home');
   const [wsConnected, setWsConnected] = useState(false);
 
   // Initial Data Fetch
@@ -119,6 +120,10 @@ export default function App() {
   }, [dispatch]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  if (activeTab === 'home') {
+    return <LandingView onEnter={() => setActiveTab('dashboard')} />;
+  }
 
   return (
     <div className="platform-layout">

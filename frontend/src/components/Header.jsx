@@ -35,7 +35,12 @@ export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }
       {/* Figma Platform Left Sidebar */}
       <aside className={`platform-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div className="brand-badge-box">
+          <button
+            type="button"
+            className="brand-badge-box brand-badge-link"
+            onClick={() => setActiveTab('home')}
+            aria-label="Back to BlockVote Bharat home"
+          >
             <div className="brand-emblem"><IconEmblem size={20} /></div>
             <div>
               <div className="brand-title">
@@ -43,7 +48,7 @@ export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }
               </div>
               <div className="brand-sub">Desh Ka Digital Voting Platform</div>
             </div>
-          </div>
+          </button>
           <button
             className="sidebar-close-btn"
             onClick={() => setSidebarOpen && setSidebarOpen(false)}

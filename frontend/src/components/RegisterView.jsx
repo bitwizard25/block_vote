@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Dialog } from '@base-ui/react/dialog';
+import { OTPInput, REGEXP_ONLY_DIGITS } from 'input-otp';
 import { requestAadhaarOTP, verifyAadhaarOTP, cancelOtp } from '../store/slices/voterSlice';
 import { IconIdCard, IconWarningTriangle, IconPhoneOtp, IconCheck, IconArrowRight } from './icons';
+
+function OtpSlot({ char, isActive, hasFakeCaret }) {
+  return (
+    <div className={`otp-slot ${isActive ? 'active' : ''}`}>
+      {char}
+      {hasFakeCaret && <div className="otp-caret" />}
+    </div>
+  );
+}
 
 export default function RegisterView({ setActiveTab }) {
   const dispatch = useDispatch();
@@ -168,53 +179,59 @@ export default function RegisterView({ setActiveTab }) {
       </div>
 
       {/* iOS Style OTP Sheet Modal */}
-      {voter.otpRequested && (
-        <div className="modal-scrim">
-          <div className="modal-sheet-panel">
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px', color: 'var(--apple-blue)' }}>
-                <IconPhoneOtp size={36} />
-              </div>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff' }}>Aadhaar Mobile OTP Verification</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '6px' }}>
-                Aadhaar se linked mobile number par aaya 6-digit OTP yahan daalein (Sent to mobile ending in <strong>7287</strong>).
-              </p>
-            </div>
-
-            <form onSubmit={handleVerifyOTP}>
-              <div className="apple-field-group">
-                <input
-                  type="text"
-                  className="apple-input mono"
-                  value={otpInput}
-                  onChange={(e) => setOtpInput(e.target.value)}
-                  maxLength={6}
-                  style={{ textAlign: 'center', fontSize: '1.8rem', letterSpacing: '8px', fontWeight: 700 }}
-                  required
-                  autoFocus
-                />
-                <div className="apple-hint" style={{ textAlign: 'center', color: 'var(--apple-amber)' }}>
-                  Demo testing ke liye OTP auto-fill kar diya gaya hai.
+      <Dialog.Root
+        open={voter.otpRequested}
+        onOpenChange={(open) => { if (!open) dispatch(cancelOtp()); }}
+      >
+        <Dialog.Portal>
+          <Dialog.Backdrop className="modal-scrim" />
+          <Dialog.Viewport className="modal-viewport">
+            <Dialog.Popup className="modal-sheet-panel">
+              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px', color: 'var(--apple-blue)' }}>
+                  <IconPhoneOtp size={36} />
                 </div>
+                <Dialog.Title style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff' }}>
+                  Aadhaar Mobile OTP Verification
+                </Dialog.Title>
+                <Dialog.Description style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '6px' }}>
+                  Aadhaar se linked mobile number par aaya 6-digit OTP yahan daalein (Sent to mobile ending in <strong>7287</strong>).
+                </Dialog.Description>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  type="button"
-                  className="apple-btn apple-btn-secondary"
-                  onClick={() => dispatch(cancelOtp())}
-                  style={{ flex: 1 }}
-                >
-                  Cancel (Radd Karein)
-                </button>
-                <button type="submit" className="apple-btn apple-btn-primary" style={{ flex: 2 }}>
-                  Verify & Issue Slip (Verify Karke Parchi Lo)
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+              <form onSubmit={handleVerifyOTP}>
+                <div className="apple-field-group">
+                  <OTPInput
+                    value={otpInput}
+                    onChange={setOtpInput}
+                    maxLength={6}
+                    pattern={REGEXP_ONLY_DIGITS}
+                    containerClassName="otp-container"
+                    autoFocus
+                    render={({ slots }) => (
+                      <>
+                        {slots.map((slot, idx) => <OtpSlot key={idx} {...slot} />)}
+                      </>
+                    )}
+                  />
+                  <div className="apple-hint" style={{ textAlign: 'center', color: 'var(--apple-amber)' }}>
+                    Demo testing ke liye OTP auto-fill kar diya gaya hai.
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <Dialog.Close className="apple-btn apple-btn-secondary" style={{ flex: 1 }}>
+                    Cancel (Radd Karein)
+                  </Dialog.Close>
+                  <button type="submit" className="apple-btn apple-btn-primary" style={{ flex: 2 }}>
+                    Verify & Issue Slip (Verify Karke Parchi Lo)
+                  </button>
+                </div>
+              </form>
+            </Dialog.Popup>
+          </Dialog.Viewport>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }

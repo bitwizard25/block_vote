@@ -48,11 +48,17 @@ describe('App E2E Tab Flow & Navigation', () => {
     });
   });
 
-  it('renders Dashboard initially and smoothly transitions across all tabs with Indian election labels', async () => {
+  it('renders the public landing page first, then transitions across all app tabs with Indian election labels', async () => {
     renderWithProviders(<App />);
 
-    // Initial Dashboard view
-    expect(screen.getByText(/Lok Sabha General Election 2026/i)).toBeInTheDocument();
+    // Public landing page is the entry point
+    expect(screen.getByText(/Vote the way you know/i)).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole('button', { name: /Enter the Voting Portal/i })[0]);
+
+    // Dashboard view after entering the app
+    await waitFor(() => {
+      expect(screen.getByText(/Lok Sabha General Election 2026/i)).toBeInTheDocument();
+    });
     expect(screen.getByText(/Sealed EVM Blocks/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Observer Nodes/i)[0]).toBeInTheDocument();
 

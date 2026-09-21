@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import NumberFlow from '@number-flow/react';
 import { mineBlock } from '../store/slices/blockchainSlice';
 import P2PCanvas from './P2PCanvas';
 import { IconIdCard, IconBallotBox } from './icons';
@@ -44,17 +45,17 @@ export default function DashboardView({ setActiveTab }) {
       <div className="stats-bento">
         <div className="stat-cell">
           <div className="stat-caption">Sealed EVM Blocks (Seal Kiye Gaye Blocks)</div>
-          <div className="stat-number">{blocks.length}</div>
+          <div className="stat-number"><NumberFlow value={blocks.length} /></div>
         </div>
         <div className="stat-cell">
           <div className="stat-caption">Votes in Queue (Queue Me Pade Votes)</div>
           <div className="stat-number" style={{ color: mempool.length > 0 ? 'var(--apple-amber)' : '#fff' }}>
-            {mempool.length}
+            <NumberFlow value={mempool.length} />
           </div>
         </div>
         <div className="stat-cell">
           <div className="stat-caption">Total Votes Cast (Kul Dale Gaye Votes)</div>
-          <div className="stat-number" style={{ color: 'var(--apple-green)' }}>{totalVotes}</div>
+          <div className="stat-number" style={{ color: 'var(--apple-green)' }}><NumberFlow value={totalVotes} /></div>
         </div>
         <div className="stat-cell">
           <div className="stat-caption">Observer Nodes (3 Active Mesh Peers)</div>
@@ -116,7 +117,9 @@ export default function DashboardView({ setActiveTab }) {
                         </div>
                       </div>
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--apple-blue)' }}>{cand.vote_count || 0}</div>
+                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--apple-blue)' }}>
+                          <NumberFlow value={cand.vote_count || 0} />
+                        </div>
                         <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>{pct}% votes</div>
                       </div>
                     </div>
