@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { apiUrl } from '../../apiConfig';
 
 export const auditReceipt = createAsyncThunk('audit/auditReceipt', async (receiptHash) => {
-  const res = await fetch('/api/audit', {
+  const res = await fetch(apiUrl('/api/audit'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ receipt_hash: receiptHash })

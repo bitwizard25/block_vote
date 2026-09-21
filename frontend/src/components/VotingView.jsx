@@ -7,6 +7,7 @@ import { setReceiptInput } from '../store/slices/auditSlice';
 import NumberFlow from '@number-flow/react';
 import { IconEmblem, IconCheck, IconWarningTriangle, IconReceiptLarge, IconInfoCircle, IconArrowRight, IconDot } from './icons';
 import { getPartySymbolIcon } from './partySymbols';
+import { apiUrl } from '../apiConfig';
 
 export default function VotingView({ setActiveTab }) {
   const dispatch = useDispatch();
@@ -236,7 +237,7 @@ export default function VotingView({ setActiveTab }) {
                   {/* Photo */}
                   <div className="evm-photo-thumb">
                     <img
-                      src={candidate.image_url || `/static/img/candidate_${candidate.id}.jpg`}
+                      src={apiUrl(candidate.image_url || `/static/img/candidate_${candidate.id}.jpg`)}
                       alt={candidate.name}
                       onError={(e) => {
                         e.target.onerror = null;

@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 
 	"blockvote/pkg/api"
 	"blockvote/pkg/blockchain"
@@ -16,7 +17,13 @@ import (
 )
 
 func main() {
-	port := flag.String("port", "8080", "Port to serve application on")
+	defaultPort := "8080"
+	// Railway, Render, Fly.io, Heroku, etc. all assign the listen port via
+	// $PORT and expect the app to bind to it, rather than a fixed port.
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		defaultPort = envPort
+	}
+	port := flag.String("port", defaultPort, "Port to serve application on")
 	difficulty := flag.Int("difficulty", 2, "PoW mining difficulty (leading zeros)")
 	flag.Parse()
 
@@ -103,7 +110,33 @@ func main() {
 	mux.Handle("/ws", router)
 
 	log.Printf("🚀 BlockVote Node online at http://localhost:%s", *port)
-	if err := http.ListenAndServe(":"+*port, mux); err != nil {
+	if err := http.ListenAndServe(":"+*port, withCORS(mux)); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
+}
+
+// withCORS lets the frontend call this API from a different origin, which is
+// the case whenever the frontend (e.g. on Vercel) and this backend (e.g. on
+// Railway/Render/Fly) are deployed as two separate services rather than one
+// binary serving both. No cookies or credentialed requests are used anywhere
+// in this app, so a permissive default is safe; set ALLOWED_ORIGIN to lock
+// it down to one exact origin in production.
+func withCORS(next http.Handler) http.Handler {
+	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+	if allowedOrigin == "" {
+		allowedOrigin = "*"
+	}
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

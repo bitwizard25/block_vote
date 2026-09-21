@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { apiUrl } from '../../apiConfig';
 
 export const requestAadhaarOTP = createAsyncThunk('voter/requestOTP', async ({ aadhaar, epic }) => {
-  const res = await fetch('/api/register', {
+  const res = await fetch(apiUrl('/api/register'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ aadhaar, epic })
@@ -14,7 +15,7 @@ export const requestAadhaarOTP = createAsyncThunk('voter/requestOTP', async ({ a
 });
 
 export const verifyAadhaarOTP = createAsyncThunk('voter/verifyOTP', async ({ aadhaar, epic, otp }) => {
-  const res = await fetch('/api/verify-otp', {
+  const res = await fetch(apiUrl('/api/verify-otp'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ aadhaar, epic, otp })
@@ -27,7 +28,7 @@ export const verifyAadhaarOTP = createAsyncThunk('voter/verifyOTP', async ({ aad
 });
 
 export const castBallot = createAsyncThunk('voter/castBallot', async ({ election_id, candidate_id, voter_secret }) => {
-  const res = await fetch('/api/vote', {
+  const res = await fetch(apiUrl('/api/vote'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ election_id, candidate_id, voter_secret })

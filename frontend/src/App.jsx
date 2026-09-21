@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Sidebar, TopBar } from './components/Header';
 import LandingView from './components/LandingView';
+import { wsUrl } from './apiConfig';
 import DashboardView from './components/DashboardView';
 import RegisterView from './components/RegisterView';
 import VotingView from './components/VotingView';
@@ -34,17 +35,16 @@ export default function App() {
 
   // WebSocket Live Cryptographic Hub
   useEffect(() => {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host;
-    // When running with Vite dev proxy, /ws is proxied to :8080/ws
-    const wsUrl = `${protocol}//${host}/ws`;
+    // Same-origin (dev proxy or the Go binary serving both) unless
+    // VITE_API_BASE_URL points this build at a separately-deployed backend.
+    const url = wsUrl();
 
     let ws;
     let reconnectTimer;
 
     const connect = () => {
       try {
-        ws = new WebSocket(wsUrl);
+        ws = new WebSocket(url);
 
         ws.onopen = () => {
           setWsConnected(true);

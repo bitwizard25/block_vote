@@ -1,25 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { apiUrl } from '../../apiConfig';
 
 export const fetchBlocks = createAsyncThunk('blockchain/fetchBlocks', async () => {
-  const res = await fetch('/api/blocks');
+  const res = await fetch(apiUrl('/api/blocks'));
   if (!res.ok) throw new Error('Failed to fetch blocks');
   return await res.json();
 });
 
 export const fetchMempool = createAsyncThunk('blockchain/fetchMempool', async () => {
-  const res = await fetch('/api/mempool');
+  const res = await fetch(apiUrl('/api/mempool'));
   if (!res.ok) throw new Error('Failed to fetch mempool');
   return await res.json();
 });
 
 export const fetchNodeStatus = createAsyncThunk('blockchain/fetchNodeStatus', async () => {
-  const res = await fetch('/api/node-status');
+  const res = await fetch(apiUrl('/api/node-status'));
   if (!res.ok) throw new Error('Failed to fetch node status');
   return await res.json();
 });
 
 export const mineBlock = createAsyncThunk('blockchain/mineBlock', async () => {
-  const res = await fetch('/api/mine', { method: 'POST' });
+  const res = await fetch(apiUrl('/api/mine'), { method: 'POST' });
   if (!res.ok) {
     const err = await res.text();
     throw new Error(err || 'Mining failed');
@@ -28,7 +29,7 @@ export const mineBlock = createAsyncThunk('blockchain/mineBlock', async () => {
 });
 
 export const simulateTamper = createAsyncThunk('blockchain/simulateTamper', async () => {
-  const res = await fetch('/api/simulate-tamper', { method: 'POST' });
+  const res = await fetch(apiUrl('/api/simulate-tamper'), { method: 'POST' });
   if (!res.ok) {
     const err = await res.text();
     throw new Error(err || 'Tamper failed');
@@ -37,7 +38,7 @@ export const simulateTamper = createAsyncThunk('blockchain/simulateTamper', asyn
 });
 
 export const healNode = createAsyncThunk('blockchain/healNode', async () => {
-  const res = await fetch('/api/heal-node', { method: 'POST' });
+  const res = await fetch(apiUrl('/api/heal-node'), { method: 'POST' });
   if (!res.ok) {
     const err = await res.text();
     throw new Error(err || 'Heal failed');

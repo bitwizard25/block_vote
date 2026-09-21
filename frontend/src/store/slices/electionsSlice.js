@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { apiUrl } from '../../apiConfig';
 
 export const fetchElections = createAsyncThunk('elections/fetchElections', async () => {
-  const res = await fetch('/api/elections');
+  const res = await fetch(apiUrl('/api/elections'));
   if (!res.ok) throw new Error('Failed to fetch elections');
   return await res.json();
 });
