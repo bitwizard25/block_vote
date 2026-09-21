@@ -485,6 +485,15 @@ body::before {
   flex-shrink: 0;
 }
 
+/* Used when a "live" indicator hasn't actually confirmed connectivity yet
+   (e.g. the landing page's hero demo before its one status fetch resolves).
+   Never claim live with the pulsing green dot until it's true. */
+.pulse-dot.dim {
+  background: var(--text-tertiary);
+  box-shadow: none;
+  animation: none;
+}
+
 @keyframes pulseGreen {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.85); }
@@ -1494,6 +1503,15 @@ body::before {
   color: var(--apple-blue);
 }
 
+.landing-brand-hindi {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  padding-left: 10px;
+  margin-left: 2px;
+  border-left: 1px solid var(--material-border);
+}
+
 .landing-nav-links {
   display: flex;
   align-items: center;
@@ -1519,15 +1537,89 @@ body::before {
   white-space: nowrap;
 }
 
+.landing-nav-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--material-border);
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.landing-nav-mobile-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(7, 7, 9, 0.96);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--material-border);
+  padding: 8px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: appleModalSpring 0.22s var(--spring-snappy);
+}
+
+.landing-nav-mobile-panel a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 12px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.landing-nav-mobile-panel a:last-of-type {
+  border-bottom: none;
+}
+
+@media (max-width: 959px) {
+  .landing-brand-hindi {
+    display: none;
+  }
+}
+
 @media (max-width: 720px) {
   .landing-nav-links a {
     display: none;
+  }
+
+  .landing-nav-toggle {
+    display: flex;
   }
 }
 
 /* --- Hero --- */
 .landing-hero {
   padding: 56px 28px 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Parallax depth layer (GSAP-driven, see LandingView.jsx). Replaces the
+   fixed, motionless body::before glow for this section specifically, so
+   the "depth" the rest of the page already implies actually moves. */
+.landing-hero-glow {
+  position: absolute;
+  top: -20%;
+  left: 10%;
+  width: 55%;
+  height: 90%;
+  background: radial-gradient(circle, rgba(0, 113, 227, 0.16) 0%, rgba(94, 92, 230, 0.07) 45%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-hero-grid {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-hero-grid {
@@ -1568,6 +1660,31 @@ body::before {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.landing-hero-proof-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.landing-hero-proof-strip .status-pill {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.landing-hero-live-readout {
+  margin-top: 14px;
+  font-size: 0.76rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+
+.landing-hero-live-readout strong {
+  color: var(--apple-green);
+  font-weight: 600;
 }
 
 .landing-hero-visual {
@@ -1631,7 +1748,7 @@ body::before {
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   padding: 0 20px;
 }
@@ -1707,6 +1824,27 @@ body::before {
   grid-column: span 2;
 }
 
+.landing-bento-full {
+  grid-column: span 3;
+}
+
+.landing-bento-full-content {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.landing-bento-full-content > div:first-child {
+  flex: 1;
+  min-width: 220px;
+}
+
+.landing-bento-full-diagram {
+  flex-shrink: 0;
+  width: 180px;
+}
+
 .landing-bento-icon {
   width: 38px;
   height: 38px;
@@ -1741,7 +1879,8 @@ body::before {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .landing-bento-wide {
+  .landing-bento-wide,
+  .landing-bento-full {
     grid-column: span 2;
   }
 }
@@ -1751,8 +1890,17 @@ body::before {
     grid-template-columns: 1fr;
   }
 
-  .landing-bento-wide {
+  .landing-bento-wide,
+  .landing-bento-full {
     grid-column: span 1;
+  }
+
+  .landing-bento-full-content {
+    flex-direction: column;
+  }
+
+  .landing-bento-full-diagram {
+    width: 100%;
   }
 }
 
@@ -1806,6 +1954,29 @@ body::before {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  position: relative;
+}
+
+/* Draws in as the section scrubs (see LandingView.jsx), visualising the
+   healed peer's ledger overwriting Node-Alpha's. Desktop only: on the
+   stacked mobile layout the two cards are no longer side by side, so a
+   horizontal beam between them would not read as connecting anything. */
+.landing-fault-beam {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 60px);
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-green));
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .landing-fault-beam {
+    display: none;
+  }
 }
 
 .landing-fault-card {
@@ -1825,6 +1996,18 @@ body::before {
   font-weight: 700;
   color: #fff;
   font-size: 0.95rem;
+}
+
+/* Both pills occupy the same grid cell so the scrubbed crossfade (see
+   LandingView.jsx) swaps state in place instead of the row resizing. */
+.landing-fault-pill-stack {
+  display: grid;
+}
+
+.landing-fault-pill-stack .status-pill {
+  grid-row: 1;
+  grid-column: 1;
+  transition: none;
 }
 
 .landing-fault-card p {
@@ -1863,27 +2046,106 @@ body::before {
 /* --- Footer --- */
 .landing-footer {
   border-top: 1px solid var(--material-border);
-  padding: 24px 28px;
+  padding: 56px 28px 28px;
   background: rgba(10, 10, 14, 0.6);
   backdrop-filter: blur(20px);
 }
 
-.landing-footer-inner {
+.landing-footer-grid {
   max-width: 1240px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding-bottom: 40px;
+}
+
+.landing-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.landing-footer-brand-name {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.landing-footer-brand-name span {
+  color: var(--apple-blue);
+}
+
+.landing-footer-col p {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.landing-footer-col h4 {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+
+.landing-footer-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.landing-footer-col a,
+.landing-footer-col li {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.landing-footer-col a {
+  transition: color 0.18s var(--spring-snappy);
+}
+
+.landing-footer-col a:hover {
+  color: #fff;
+}
+
+.landing-footer-bottom {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--material-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
-  font-size: 0.8rem;
+  gap: 10px;
+  font-size: 0.76rem;
   color: var(--text-tertiary);
 }
 
-.landing-footer-specs {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+@media (max-width: 900px) {
+  .landing-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .landing-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .landing-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* ==========================================================================
