@@ -205,6 +205,24 @@ export function IconUser({ size = 20, ...props }) {
   );
 }
 
+export function IconLogOut({ size = 18, ...props }) {
+  return (
+    <svg {...base(size, props)}>
+      <path d="M9 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20H9" />
+      <path d="M20 12H10.5M20 12l-3.5-3.5M20 12l-3.5 3.5" />
+    </svg>
+  );
+}
+
+export function IconEye({ size = 18, ...props }) {
+  return (
+    <svg {...base(size, props)}>
+      <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
 export function IconLock({ size = 20, ...props }) {
   return (
     <svg {...base(size, props)}>

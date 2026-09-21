@@ -1,8 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { Menu } from '@base-ui/react/menu';
+import { logout } from '../store/slices/voterSlice';
 import {
   IconEmblem, IconBallotBox, IconIdCard, IconVvpat, IconPulse, IconLedger,
-  IconShieldCheck, IconMenu, IconClose, IconUser, IconArrowRight, IconDot
+  IconShieldCheck, IconMenu, IconClose, IconUser, IconArrowRight, IconDot,
+  IconChevronDown, IconLogOut
 } from './icons';
 
 export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) {
@@ -11,7 +14,7 @@ export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }
 
   const citizenTabs = [
     { id: 'voting', icon: IconBallotBox, label: 'EVM Voting Booth', sub: 'Vote daalo yahan' },
-    { id: 'register', icon: IconIdCard, label: 'Voter ID & Slip', sub: 'Apni matdata parchi lo' },
+    { id: 'register', icon: IconIdCard, label: 'My Voter Slip', sub: 'Apni matdata parchi lo' },
     { id: 'audit', icon: IconVvpat, label: 'VVPAT Audit', sub: 'Vote parchi verify karo' },
   ];
 
@@ -110,7 +113,7 @@ export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }
             className="citizen-info-pill"
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              setActiveTab('register');
+              setActiveTab(isRegistered ? 'register' : 'login');
               if (setSidebarOpen) setSidebarOpen(false);
             }}
           >
@@ -119,10 +122,10 @@ export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }
             </div>
             <div className="citizen-status-col">
               <div className="citizen-name">
-                {isRegistered ? (voter.epic || 'Verified Citizen') : 'Aam Nagrik (Citizen)'}
+                {isRegistered ? (voter.epic || 'Verified Citizen') : 'Guest Observer'}
               </div>
               <div className={`citizen-status-tag ${isRegistered ? 'verified' : 'unverified'}`}>
-                <IconDot size={7} /> {isRegistered ? 'Slip Ready Hai' : 'Parchi Banayein'}
+                <IconDot size={7} /> {isRegistered ? 'Slip Ready Hai' : 'Sign In Karein'}
               </div>
             </div>
             <IconArrowRight size={14} style={{ color: 'var(--text-tertiary)', flexShrink: 0 }} />
@@ -133,13 +136,57 @@ export function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }
   );
 }
 
+function AccountMenu({ setActiveTab }) {
+  const dispatch = useDispatch();
+  const voter = useSelector(state => (state && state.voter) ? state.voter : {});
+  const isRegistered = !!(voter.aadhaarHash || voter.mnemonic);
+
+  return (
+    <Menu.Root>
+      <Menu.Trigger className="account-menu-trigger" aria-label="Account menu">
+        <div className="citizen-avatar" style={{ width: 28, height: 28 }}>
+          {isRegistered ? <IconEmblem size={14} /> : <IconUser size={14} />}
+        </div>
+        <IconChevronDown size={13} className="account-menu-hide-mobile" />
+      </Menu.Trigger>
+      <Menu.Portal>
+        <Menu.Positioner sideOffset={8} align="end">
+          <Menu.Popup className="account-menu-popup">
+            <div className="account-menu-header">
+              <div className="account-menu-name">{isRegistered ? (voter.epic || 'Verified Citizen') : 'Guest Observer'}</div>
+              <div className="account-menu-sub">{isRegistered ? 'Slip ready' : 'Not signed in'}</div>
+            </div>
+            {isRegistered ? (
+              <>
+                <Menu.Item className="account-menu-item" onClick={() => setActiveTab('register')}>
+                  <IconIdCard size={15} /> My Voter Slip
+                </Menu.Item>
+                <Menu.Item
+                  className="account-menu-item account-menu-item-danger"
+                  onClick={() => { dispatch(logout()); setActiveTab('login'); }}
+                >
+                  <IconLogOut size={15} /> Log Out
+                </Menu.Item>
+              </>
+            ) : (
+              <Menu.Item className="account-menu-item" onClick={() => setActiveTab('login')}>
+                <IconIdCard size={15} /> Sign In
+              </Menu.Item>
+            )}
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Portal>
+    </Menu.Root>
+  );
+}
+
 export function TopBar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) {
   const voter = useSelector(state => (state && state.voter) ? state.voter : {});
   const isRegistered = !!(voter.aadhaarHash || voter.mnemonic);
 
   const titles = {
     voting: 'EVM Voting Booth (Vote Daalo)',
-    register: 'Voter ID & Slip (Parchi Lo)',
+    register: 'My Voter Slip (Parchi)',
     audit: 'VVPAT Audit (Parchi Check Karo)',
     dashboard: 'Election Overview (Live Dashboard)',
     explorer: 'Public Vote Ledger (Khula Khata)',
@@ -171,12 +218,14 @@ export function TopBar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen })
 
         <button
           className="topbar-voter-action"
-          onClick={() => setActiveTab(isRegistered ? 'voting' : 'register')}
+          onClick={() => setActiveTab(isRegistered ? 'voting' : 'login')}
         >
           {isRegistered ? <IconBallotBox size={15} /> : <IconIdCard size={15} />}
-          <span className="voter-btn-text-desktop">{isRegistered ? 'Cast Vote (Vote Daalo)' : 'Get Voter Slip (Parchi Lo)'}</span>
-          <span className="voter-btn-text-mobile">{isRegistered ? 'Vote' : 'Slip'}</span>
+          <span className="voter-btn-text-desktop">{isRegistered ? 'Cast Vote (Vote Daalo)' : 'Sign In'}</span>
+          <span className="voter-btn-text-mobile">{isRegistered ? 'Vote' : 'Sign In'}</span>
         </button>
+
+        <AccountMenu activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     </header>
   );

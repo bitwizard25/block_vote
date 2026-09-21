@@ -67,6 +67,16 @@ const voterSlice = createSlice({
     },
     cancelOtp: (state) => {
       state.otpRequested = false;
+    },
+    logout: (state) => {
+      state.verified = false;
+      state.voterSecret = '';
+      state.mnemonic = '';
+      state.commitment = '';
+      state.lastReceiptHash = '';
+      state.voteSuccess = false;
+      state.voteError = null;
+      state.regError = null;
     }
   },
   extraReducers: (builder) => {
@@ -113,5 +123,5 @@ const voterSlice = createSlice({
   }
 });
 
-export const { setVoterSecretDirect, resetVoteState, cancelOtp } = voterSlice.actions;
+export const { setVoterSecretDirect, resetVoteState, cancelOtp, logout } = voterSlice.actions;
 export default voterSlice.reducer;

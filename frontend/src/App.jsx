@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Sidebar, TopBar } from './components/Header';
 import LandingView from './components/LandingView';
+import LoginView from './components/LoginView';
 import { wsUrl } from './apiConfig';
 import DashboardView from './components/DashboardView';
 import RegisterView from './components/RegisterView';
@@ -122,7 +123,16 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (activeTab === 'home') {
-    return <LandingView onEnter={() => setActiveTab('dashboard')} />;
+    return <LandingView onEnter={() => setActiveTab('login')} />;
+  }
+
+  if (activeTab === 'login') {
+    return (
+      <LoginView
+        onSuccess={() => setActiveTab('dashboard')}
+        onBack={() => setActiveTab('home')}
+      />
+    );
   }
 
   return (

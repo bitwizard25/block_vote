@@ -55,6 +55,12 @@ describe('App E2E Tab Flow & Navigation', () => {
     expect(screen.getByText(/Vote the way you know/i)).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: /Enter the Voting Portal/i })[0]);
 
+    // Login gate appears before the app shell
+    await waitFor(() => {
+      expect(screen.getByText(/Sign in to BlockVote Bharat/i)).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Continue as guest observer/i }));
+
     // Dashboard view after entering the app
     await waitFor(() => {
       expect(screen.getByText(/Lok Sabha General Election 2026/i)).toBeInTheDocument();
@@ -62,11 +68,10 @@ describe('App E2E Tab Flow & Navigation', () => {
     expect(screen.getByText(/Sealed EVM Blocks/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Observer Nodes/i)[0]).toBeInTheDocument();
 
-    // 1. Navigate to Voter ID & Slip
-    fireEvent.click(screen.getByText(/Voter ID & Slip/i));
+    // 1. Navigate to My Voter Slip
+    fireEvent.click(screen.getByText(/My Voter Slip/i));
     await waitFor(() => {
-      expect(screen.getByText(/Voter Verification & Digital Slip/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('XXXX-XXXX-XXXX')).toBeInTheDocument();
+      expect(screen.getByText(/No voter slip on this session yet/i)).toBeInTheDocument();
     });
 
     // 2. Navigate to EVM Voting Booth

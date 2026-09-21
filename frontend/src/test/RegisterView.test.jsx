@@ -1,21 +1,26 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
-import { screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from './test-utils';
 import RegisterView from '../components/RegisterView';
 
-describe('RegisterView Component', () => {
-  it('renders registration form inputs and checksum information', () => {
-    renderWithProviders(<RegisterView />);
+describe('RegisterView Component ("My Voter Slip")', () => {
+  it('prompts a guest observer to sign in when no voter slip exists yet', () => {
+    renderWithProviders(<RegisterView setActiveTab={vi.fn()} />);
 
-    expect(screen.getByText(/Voter Verification & Digital Slip/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('XXXX-XXXX-XXXX')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('ABC1234567')).toBeInTheDocument();
-    expect(screen.getByText(/Verhoeff checksum algorithm/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Request Aadhaar OTP/i })).toBeInTheDocument();
+    expect(screen.getByText(/No voter slip on this session yet/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Sign In/i })).toBeInTheDocument();
   });
 
-  it('renders Official Digital Voter Slip when voter is verified', () => {
+  it('routes a guest to the login page', () => {
+    const setActiveTab = vi.fn();
+    renderWithProviders(<RegisterView setActiveTab={setActiveTab} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Sign In/i }));
+    expect(setActiveTab).toHaveBeenCalledWith('login');
+  });
+
+  it('renders the Official Digital Voter Slip when the voter is verified', () => {
     const preloadedState = {
       voter: {
         verified: true,
@@ -28,7 +33,7 @@ describe('RegisterView Component', () => {
       }
     };
 
-    renderWithProviders(<RegisterView />, { preloadedState });
+    renderWithProviders(<RegisterView setActiveTab={vi.fn()} />, { preloadedState });
 
     expect(screen.getByText(/Official Digital Voter Slip/i)).toBeInTheDocument();
     expect(screen.getByText(/apple banana cherry dragon eagle/i)).toBeInTheDocument();
@@ -36,21 +41,20 @@ describe('RegisterView Component', () => {
     expect(screen.getByRole('button', { name: /Copy Words/i })).toBeInTheDocument();
   });
 
-  it('renders OTP challenge modal sheet when otpRequested is true', () => {
+  it('logs out and returns to the login page', () => {
+    const setActiveTab = vi.fn();
     const preloadedState = {
       voter: {
-        otpRequested: true,
-        demoOtp: '654321',
-        aadhaar: '8473-9281-7287',
+        verified: true,
+        mnemonic: 'apple banana cherry dragon eagle falcon garden hammer island jungle koala lemon',
+        voterSecret: 'a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0',
         epic: 'ABC1234567',
-        verified: false,
       }
     };
 
-    renderWithProviders(<RegisterView />, { preloadedState });
+    renderWithProviders(<RegisterView setActiveTab={setActiveTab} />, { preloadedState });
 
-    expect(screen.getByText(/Aadhaar Mobile OTP Verification/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Verify & Issue Slip/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Cancel/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Log out of this session/i }));
+    expect(setActiveTab).toHaveBeenCalledWith('login');
   });
 });

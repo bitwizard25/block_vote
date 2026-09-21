@@ -11,7 +11,7 @@ describe('Header Component', () => {
 
     expect(screen.getAllByText(/BlockVote/i)[0]).toBeInTheDocument();
     expect(screen.getByText(/3-NODE CONSENSUS/i)).toBeInTheDocument();
-    expect(screen.getByText(/Voter ID & Slip/i)).toBeInTheDocument();
+    expect(screen.getByText(/My Voter Slip/i)).toBeInTheDocument();
     expect(screen.getByText(/EVM Voting Booth/i)).toBeInTheDocument();
     expect(screen.getByText(/VVPAT Audit/i)).toBeInTheDocument();
   });

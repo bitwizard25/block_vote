@@ -1885,3 +1885,290 @@ body::before {
   gap: 16px;
   flex-wrap: wrap;
 }
+
+/* ==========================================================================
+   LOGIN PAGE - the auth gate between the landing page and the app shell.
+   Same split-panel language as the hero: brand/trust story on one side,
+   the actual task (sign in) on the other.
+   ========================================================================== */
+
+.login-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: stretch;
+}
+
+.login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.login-brand-panel {
+  background: linear-gradient(160deg, #0d0d14 0%, #070709 60%);
+  border-right: 1px solid var(--material-border);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+}
+
+.login-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-start;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.login-brand-accent {
+  color: var(--apple-blue);
+}
+
+.login-brand-title {
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #fff;
+  max-width: 440px;
+}
+
+.login-brand-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 420px;
+}
+
+.login-trust-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+  max-width: 420px;
+}
+
+.login-trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.login-trust-item svg {
+  color: var(--apple-blue);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.login-form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 28px;
+}
+
+.login-form-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-form-head {
+  margin-bottom: 24px;
+}
+
+.login-form-head h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 10px 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.login-form-head p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--apple-red);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  background: rgba(255, 69, 58, 0.12);
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--material-border);
+}
+
+.login-divider span {
+  padding: 0 12px;
+}
+
+.login-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--material-border);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s var(--spring-snappy);
+}
+
+.login-link-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.login-guest-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 20px 0 0;
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: color 0.18s var(--spring-snappy);
+}
+
+.login-guest-btn:hover {
+  color: var(--apple-blue);
+}
+
+@media (max-width: 900px) {
+  .login-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form-panel {
+    padding: 32px 20px;
+  }
+}
+
+/* ==========================================================================
+   ACCOUNT MENU (base-ui Menu) - topbar identity dropdown
+   ========================================================================== */
+
+.account-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  transition: background 0.18s var(--spring-snappy);
+}
+
+.account-menu-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.account-menu-popup {
+  background: #1c1c24;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  padding: 8px;
+  width: 220px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  animation: appleModalSpring 0.22s var(--spring-snappy);
+}
+
+.account-menu-header {
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 6px;
+}
+
+.account-menu-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.account-menu-sub {
+  font-size: 0.74rem;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.account-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  outline: none;
+}
+
+.account-menu-item[data-highlighted] {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.account-menu-item-danger[data-highlighted] {
+  background: rgba(255, 69, 58, 0.15);
+  color: var(--apple-red);
+}
+
+@media (max-width: 600px) {
+  .account-menu-hide-mobile {
+    display: none;
+  }
+}
